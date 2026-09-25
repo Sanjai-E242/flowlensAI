@@ -140,11 +140,28 @@ flowlens-ai/
 ├── scripts/
 │   └── test-engine.ts              # Deterministic & simulation assertion suites
 ├── docs/                           # Technical documentation & architecture specs
+│   ├── FlowLens-AI-Hackathon-Pitch.pptx # Official Hackathon Presentation Deck
+│   ├── ARCHITECTURE.md
+│   └── PROCESS_ENGINE.md
 ├── .env.example                    # Environment variable template
 └── README.md
 ```
 
 ---
+
+## Hackathon Pitch Deck
+
+The verified, canonical presentation deck is available in the repository at:
+📁 [`docs/FlowLens-AI-Hackathon-Pitch.pptx`](file:///c:/Users/Pranav/Desktop/flowlens-ai/docs/FlowLens-AI-Hackathon-Pitch.pptx)
+
+The presentation strictly aligns with the live production system:
+- **Core Narrative**: Where Does the Process Actually Slow Down? → Why is it slow? → What is likely to become the next bottleneck? → What happens if we intervene? → What should the manager know?
+- **4-Tier Architecture**: Deterministic Analytics (TypeScript) + Predictive ML (Python/FastAPI) + What-If Simulation (Kingman Math) + Gemini AI Explanation.
+- **Verified Benchmark Scenario**: 10 cases, 5h 45m average cycle time, Verification bottleneck (Score 62.5, 94.2% waiting queue delay), +2 resource intervention yielding 64% cycle time reduction and migration to Review.
+- **Universal Applicability**: Domain-independent across Healthcare, Banking, Logistics, Manufacturing, and Customer Operations.
+
+---
+
 
 ## Deployment Architecture
 
