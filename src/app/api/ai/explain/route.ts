@@ -12,10 +12,11 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { analysis, simulation, targetStage } = body as {
+    const { analysis, simulation, targetStage, mlPredictions } = body as {
       analysis?: ProcessAnalysisResult;
       simulation?: SimulationResult | null;
       targetStage?: string;
+      mlPredictions?: import("@/shared/types").MLProcessPredictions | null;
     };
 
     // Strict validation: Reject missing or malformed analysis
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Build sanitized structured evidence contract
-    const evidence = buildStructuredEvidence(analysis, simulation, targetStage);
+    const evidence = buildStructuredEvidence(analysis, simulation, targetStage, mlPredictions);
 
     // Generate verified explanation via Gemini layer
     const result = await generateUnifiedAIExplanation(evidence);

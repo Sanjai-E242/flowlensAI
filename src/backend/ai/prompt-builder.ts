@@ -28,6 +28,19 @@ VERIFIED EVIDENCE CONTRACT (JSON)
 ${JSON.stringify(evidence, null, 2)}
 
 ==================================================
+CRITICAL ARCHITECTURAL DISTINCTION RULES (NEVER CONFUSE THESE CATEGORIES):
+1. OBSERVED: Grounded strictly in verified historical event logs.
+   Example: '${evidence.bottleneck.stage} currently contributes ${evidence.bottleneck.waitingContributionPct}% of process waiting time.'
+2. PREDICTED: Grounded strictly in supervised/unsupervised Machine Learning forecasting.
+   Example: ${
+     evidence.mlPredictions?.predictedBottleneckStage
+       ? `'The model predicts ${evidence.mlPredictions.predictedBottleneckStage} as the next likely bottleneck with ${Math.round((evidence.mlPredictions.probability || 0.82) * 100)}% probability.'`
+       : "'The machine learning model forecasts the next likely operational constraint.'"
+   }
+3. SIMULATED: Grounded strictly in counterfactual simulation models.
+   Example: 'Adding resources under the modeled scenario is projected to reduce waiting.'
+NEVER mix or conflate these three categories. Always attribute observed facts to observation, forecasts to ML, and scenarios to simulation.
+
 CRITICAL METRIC DEFINITION RULES:
 - '${evidence.processBaseline.avgCaseWaitingTime}' is the Process-Level Average Waiting Time per case across all stages.
 - '${evidence.bottleneck.stageSpecificAvgWaitingTime}' is the Stage-Specific Queue Wait for ${evidence.bottleneck.stage} ('${evidence.bottleneck.stageQueueWaitLabel}'), representing ${evidence.bottleneck.waitingContributionPct}% of process waiting.

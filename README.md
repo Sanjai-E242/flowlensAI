@@ -1,217 +1,281 @@
-# FlowLens AI — Process Intelligence & Bottleneck Detection
+# FlowLens AI — Universal Process Intelligence Platform
 
-> **Deterministic process mining + Gemini AI explanations.**
-> Upload a process event log → find the bottleneck → simulate interventions → get AI-narrated executive insights.
+> **Deterministic Process Mining + Predictive Machine Learning + What-If Simulation + Gemini AI Explanation**
+> 
+> FlowLens AI transforms event-log data into operational foresight across Healthcare, Financial Services, Supply Chain, Logistics, and Manufacturing.
 
 ---
 
-## What It Does
+## Architecture Formula
 
-FlowLens AI is a full-stack process intelligence platform that answers four operational questions in sequence:
+```
+FlowLens AI
+=
+Deterministic Process Intelligence   [what is happening]
++
+Predictive Machine Learning          [what is likely to happen]
++
+What-If Simulation                   [what may happen after intervention]
++
+Gemini AI Explanation                [explains verified evidence]
+```
 
-| Question | Capability |
-|---|---|
-| **Where is the process slowing down?** | Bottleneck DNA detection with 6 evidence signals |
-| **Why is it slowing down?** | Root-cause attribution (resource overload, queue build-up, peak periods) |
-| **What happens if we intervene?** | What-If simulator with Kingman queue-congestion math |
-| **What does it mean in plain language?** | Gemini AI executive narration — grounded in verified deterministic evidence |
+### The Four Analytical Tiers
+
+1. **DETERMINISTIC ENGINE (What is happening)**
+   - Single source of truth for observed historical metrics.
+   - Calculates exact cycle times, processing durations, inter-stage queue delays, resource utilizations, and 6-signal Bottleneck DNA.
+   - 100% deterministic TypeScript mathematics — zero hallucination, zero black-box assumptions.
+
+2. **PREDICTIVE MACHINE LEARNING (What is likely to happen)**
+   - Scikit-learn models trained on stage transitions, queue dynamics, and resource load features.
+   - **Bottleneck Forecaster (`RandomForestClassifier`)**: Predicts the probability of upcoming stage congestion and estimated hours until bottleneck emergence.
+   - **Anomaly Detector (`IsolationForest`)**: Unsupervised anomaly detection scoring execution deviations, unusual transitions, and queue inflation.
+   - **Remaining-Time Predictor (`RandomForestRegressor`)**: Predicts remaining case cycle duration with 95% confidence intervals based on current stage and elapsed progress.
+   - *Note:* ML models predict statistical likelihoods based on historical patterns; they do not assert deterministic causality.
+
+3. **WHAT-IF SIMULATION (What may happen after intervention)**
+   - Counterfactual modeling grounded in Kingman's formula for queue congestion.
+   - Evaluates resource reallocation, capacity expansion, and arrival rate changes.
+   - Predicts bottleneck migration across 5 structural transition patterns.
+
+4. **GEMINI AI EXPLANATION (Explains verified evidence)**
+   - Grounded executive narrative generation powered by Google Gemini (`@google/genai`).
+   - Strictly consumes structured JSON evidence (`AIStructuredEvidence`) containing verified deterministic metrics and ML predictions.
+   - Gemini never calculates numbers; it interprets verified facts into strategic business insights with clear assumption disclaimers.
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router, TypeScript strict) |
-| Styling | Tailwind CSS v4 |
-| Database | Supabase (PostgreSQL + Row Level Security) |
-| AI Narration | Google Gemini API (`@google/genai`) |
-| Analytics Engine | Pure TypeScript — zero ML, 100% deterministic |
-| Testing | 99 assertions across 25 test suites |
+| Tier | Component | Technology |
+|---|---|---|
+| **Frontend & Orchestration** | Web Application | Next.js 16 (App Router, React 19, TypeScript Strict) |
+| | Styling & UI | Tailwind CSS v4, Lucide Icons |
+| | Visualization | SVG Process Flow Graphs, Interactive Sliders, Metrics Cards |
+| **Data & State** | Persistence | Supabase (PostgreSQL + Row-Level Security) |
+| **Deterministic Analytics** | Process Mining Engine | Pure TypeScript — zero dependencies, 103 test assertions |
+| | Simulation Engine | Kingman Queueing Equations & Migration Classifier |
+| **Machine Learning Service** | Microservice Framework | Python 3.12 + FastAPI + Uvicorn |
+| | ML Models | Scikit-learn (`RandomForestClassifier`, `IsolationForest`, `RandomForestRegressor`) |
+| | Feature Engineering | Pandas, NumPy (one-hot encoding, stage elapsed tracking, rolling queues) |
+| **Generative AI** | Executive Narration | Google Gemini API (`@google/genai`) |
+| **Verification & Quality** | Test Suites | `pytest` (10 Python tests) + `npm test` (103 TypeScript assertions) |
 
 ---
 
-## Architecture
+## End-to-End System Pipeline
 
 ```
-CSV Upload
-   ↓
-Case Reconstruction (chronological, inter-stage waiting)
-   ↓
-Stage Analytics (mean, median, std dev, cycle contribution)
-   ↓
-Bottleneck DNA Model  ← 0.4 × processing + 0.6 × waiting contribution
-   ↓
-Root Cause Attribution (resource load, transitions, peak periods)
-   ↓
-What-If Simulator  ← Kingman queue congestion equations (deterministic)
-   ↓
-Bottleneck Migration Engine  ← 5-pattern detection
-   ↓
-Gemini Evidence Builder  ← structured evidence, zero free-form numbers
-   ↓
-Gemini AI Narration  ← executive summary, deterministic fallback guaranteed
-   ↓
-Interactive Dashboard  ← 7 sections, staggered animations, Supabase persistence
+Raw Process Event Log (CSV)
+   │
+   ▼
+[ Tier 1: Deterministic Engine ]
+   ├── Case Chronology Reconstruction
+   ├── Stage Analytics (mean, median, p95, stdev)
+   ├── Inter-Stage Transition & Queue Wait Analysis
+   └── Bottleneck DNA Scoring (0.4 × Processing + 0.6 × Queue Waiting)
+   │
+   ├───► [ Tier 2: Predictive Machine Learning Service ]
+   │        ├── Bottleneck Forecaster (Congestion probability & ETA)
+   │        ├── Anomaly Detector (IsolationForest outlier scoring)
+   │        └── Remaining Time Predictor (Expected duration + CI)
+   │
+   ├───► [ Tier 3: What-If Simulation Engine ]
+   │        ├── Kingman G/G/c Queue Congestion Modeling
+   │        ├── Capacity & Arrival Rate Perturbation
+   │        └── 5-Pattern Bottleneck Migration Detection
+   │
+   └───► [ Tier 4: Gemini AI Narration Layer ]
+            ├── Verified Evidence Assembly (AIStructuredEvidence)
+            ├── Role-conditioned Executive Synthesis
+            └── Deterministic Fallback Guaranteed
+   │
+   ▼
+Unified Executive Dashboard (Vercel-hosted)
 ```
-
-**Key architectural rule:** Gemini **never** calculates metrics. It receives a verified `AIStructuredEvidence` contract and converts it to plain language.
 
 ---
 
 ## Project Structure
 
 ```
-src/
-├── app/            # Next.js routes & pages
-├── frontend/       # React components (browser-safe)
-├── backend/
-│   ├── engine/     # Deterministic process mining pipeline
-│   ├── simulation/ # What-If & Kingman simulator
-│   ├── ai/         # Gemini evidence builder + explainer
-│   └── database/   # Supabase server-only client
-├── shared/types/   # TypeScript contracts (process, simulation, AI)
-└── data/           # Synthetic benchmark dataset
+flowlens-ai/
+├── ml-service/                     # Python FastAPI Machine Learning Microservice
+│   ├── app.py                      # FastAPI server & route handlers
+│   ├── features/                   # Feature engineering & tabular transformations
+│   ├── models/                     # Model wrappers (forecaster, anomaly, remaining-time)
+│   ├── training/                   # Model training pipeline & hyperparameter tuning
+│   ├── inference/                  # Low-latency inference engine
+│   ├── artifacts/                  # Serialized .joblib model binaries & feature metadata
+│   ├── tests/                      # pytest test suite
+│   └── requirements.txt            # Python dependencies
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── datasets/analyze/   # Deterministic process mining endpoint
+│   │   │   ├── simulation/         # What-If simulation endpoints
+│   │   │   ├── ai/explain/         # Gemini explanation endpoint
+│   │   │   └── ml/                 # Next.js ML proxy routes
+│   │   │       ├── predict/        # Full predictive bundle
+│   │   │       ├── bottleneck-forecast/
+│   │   │       ├── anomaly/
+│   │   │       ├── remaining-time/
+│   │   │       └── intervention/   # Model-guided optimization
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── backend/
+│   │   ├── engine/                 # Deterministic event log engine
+│   │   ├── simulation/             # Kingman congestion & migration simulator
+│   │   ├── ai/                     # Gemini evidence builder & explainer
+│   │   ├── ml/                     # ML client connector & offline fallback generator
+│   │   └── database/               # Supabase client & schemas
+│   ├── frontend/
+│   │   └── components/
+│   │       ├── dashboard/          # Executive dashboard views
+│   │       ├── ml/                 # Predictive Intelligence Dashboard Panel
+│   │       ├── simulation/         # What-If Simulator Panel
+│   │       └── ai/                 # Gemini AI Explanation Panel
+│   └── shared/types/               # TypeScript interfaces (process, simulation, ML, AI)
+├── scripts/
+│   └── test-engine.ts              # Deterministic & simulation assertion suites
+├── docs/                           # Technical documentation & architecture specs
+├── .env.example                    # Environment variable template
+└── README.md
 ```
 
 ---
 
-## Demo Flow (for judges)
+## Deployment Architecture
 
-1. **Load demo dataset** — click "Load Demo" in the top nav  
-   The benchmark CSV contains a hidden queue bottleneck at **Verification** (score 62.5)
+### Dual-Service Architecture
 
-2. **Inspect the bottleneck** — the dashboard automatically ranks stages  
-   Verification shows `WAITING` as primary DNA factor with 94.2% queue contribution
+FlowLens AI is built as a cloud-native decoupled architecture:
 
-3. **Run a What-If simulation** — scroll to the simulator panel  
-   Try **"+2 Resources to Verification"** — cycle time drops 64%, bottleneck migrates to Review
+1. **Next.js Web Application (Deploy to Vercel)**:
+   - Houses the user interface, deterministic analytics engine, What-If simulation, Supabase integration, and Gemini AI narrative.
+   - Deploys seamlessly to Vercel with zero external build dependencies.
 
-4. **Read the AI explanation** — click "Generate AI Explanation"  
-   Gemini produces a grounded executive narrative with assumptions and limitations
+2. **Python FastAPI ML Service (Containerized Microservice)**:
+   - Houses the scikit-learn models and high-throughput inference endpoints.
+   - Deploys to any container platform (Docker, Google Cloud Run, Railway, Render, AWS ECS).
+   - Configured in Next.js via the `ML_SERVICE_URL` environment variable.
 
-5. **Upload your own CSV** — click "Upload CSV"  
-   Format: `case_id, activity, start_time, end_time` (ISO 8601 timestamps, aliases accepted)
+### Graceful Offline Fallback
 
----
-
-## CSV Format
-
-```csv
-case_id,activity,start_time,end_time,resource_id
-CASE-001,Intake,2024-01-15T08:00:00Z,2024-01-15T08:30:00Z,Alice
-CASE-001,Review,2024-01-15T09:00:00Z,2024-01-15T10:00:00Z,Bob
-```
-
-**Accepted column aliases:** `case`, `id`, `case_id` / `activity`, `task`, `stage` / `start`, `start_time`, `timestamp` / `end`, `end_time`, `complete_time` / `resource`, `resource_id`, `performer`
+The Next.js application **never** requires the Python service to remain functional:
+- If `ML_SERVICE_URL` is omitted, unreachable, or cold-starting, the Next.js ML client automatically detects the service state and transitions to a **deterministic statistical fallback mode**.
+- Fallback predictions are computed directly in TypeScript from verified historical distributions, tagging all outputs with `source: "heuristic_fallback"`.
+- The Vercel deployment remains 100% operational with full dashboard, simulation, and Gemini narrative capabilities.
 
 ---
 
-## Setup
+## Setup & Local Development
 
-### Prerequisites
-- Node.js 18+
-- Supabase project (free tier works)
-- Google Gemini API key
+### 1. Prerequisites
+- Node.js 18+ & npm
+- Python 3.10+ (for ML service)
+- Supabase Project (optional for persistence)
+- Google Gemini API Key (for executive narration)
 
-### Installation
+### 2. Next.js Web Application Setup
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/pranav241801205/flowlens-ai.git
 cd flowlens-ai
 npm install
 ```
 
-### Environment Variables
-
+Configure `.env.local`:
 ```bash
 cp .env.example .env.local
 ```
 
-Edit `.env.local`:
-
 ```env
+# Supabase
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_anon_key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-anon-key
 SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SECRET_KEY=your_service_role_key
-GEMINI_API_KEY=your_gemini_api_key
+SUPABASE_SECRET_KEY=your-service-role-key
+
+# Gemini AI
+GEMINI_API_KEY=your-gemini-api-key
+
+# Python ML Microservice (Optional - defaults to offline fallback if omitted)
+ML_SERVICE_URL=http://127.0.0.1:8000
 ```
 
-### Run
+Run Next.js:
+```bash
+npm run dev
+```
+
+### 3. Python ML Microservice Setup (Optional)
 
 ```bash
-npm run dev        # Development server
-npm run test       # 99-assertion test suite
-npm run build      # Production build
-npm run lint       # ESLint
+cd ml-service
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app:app --host 127.0.0.1 --port 8000
 ```
 
 ---
 
-## API Endpoints
+## Verification & Testing
 
-| Method | Route | Purpose |
+Run the full verification suite across both TypeScript and Python:
+
+```bash
+# 1. Deterministic Process Engine Tests (103 assertions across 25 suites)
+npm run test
+
+# 2. Python ML Microservice Tests
+cd ml-service && pytest tests/ && cd ..
+
+# 3. TypeScript Typecheck
+npx tsc --noEmit
+
+# 4. ESLint Static Analysis
+npm run lint
+
+# 5. Production Next.js Build
+npm run build
+```
+
+---
+
+## API Reference
+
+### Process Mining & Simulation
+| Method | Route | Description |
 |---|---|---|
-| `GET` | `/api/health` | System heartbeat |
-| `POST` | `/api/datasets/analyze` | Analyze CSV, optionally persist to Supabase |
-| `POST` | `/api/simulation` | Run a single What-If scenario |
-| `POST` | `/api/simulation/compare` | Compare multiple scenarios in parallel |
-| `POST` | `/api/ai/explain` | Generate Gemini AI explanation |
-| `POST` | `/api/ai/executive-summary` | Generate executive summary only |
+| `GET` | `/api/health` | Healthcheck and service connectivity heartbeat |
+| `POST` | `/api/datasets/analyze` | Ingests CSV event log, returns full deterministic analysis |
+| `POST` | `/api/simulation` | Runs a single Kingman What-If parameter intervention |
+| `POST` | `/api/simulation/compare` | Compares multiple intervention scenarios side-by-side |
+| `POST` | `/api/ai/explain` | Generates Gemini AI executive explanation from structured evidence |
 
----
-
-## Metric Definitions
-
-| Metric | Scope | Formula |
+### Machine Learning Endpoints
+| Method | Route | Description |
 |---|---|---|
-| **Avg Case Cycle Time** | Process-level | avg( end_last_stage − start_first_stage ) per case |
-| **Avg Case Processing** | Process-level | avg( Σ processing durations ) per case |
-| **Avg Case Waiting** | Process-level | Cycle − Processing per case |
-| **Stage Queue Wait** | Stage-level | avg( stage_start − prev_stage_end ) per event |
-| **Bottleneck Score** | Stage-level | 0.4 × proc_contribution% + 0.6 × wait_contribution% |
-
-> **Invariant:** Avg Case Cycle Time = Avg Case Processing + Avg Case Waiting (enforced in 99 test assertions)
+| `POST` | `/api/ml/predict` | Returns complete predictive package (forecast + anomalies + durations) |
+| `POST` | `/api/ml/bottleneck-forecast` | Predicts stage congestion likelihood and hours to bottleneck |
+| `POST` | `/api/ml/anomaly` | IsolationForest anomaly scoring for active process cases |
+| `POST` | `/api/ml/remaining-time` | Predicts expected remaining cycle duration with 95% CI |
+| `POST` | `/api/ml/intervention` | Generates model-guided capacity and routing recommendations |
 
 ---
 
-## Test Coverage
+## Security & Compliance
 
-```
-Suite  1: CSV Parser & Header Normalization
-Suite  2: Timestamp Parsing & Duration Formatting
-Suite  3: Case Reconstruction
-Suite  4: Stage Analytics
-Suite  5: Bottleneck Scoring & DNA
-Suite  6: Resource Analytics
-Suite  7: Peak Analytics
-Suite  8: Transition Queue Mapping
-Suite  9: Root Cause Attribution
-Suite 10: End-to-End analyzeProcess()
-Suite 11: Synthetic Hidden-Bottleneck Dataset
-Suite 12-16: Simulation Math (Kingman, queue relief, migration)
-Suite 17-20: Bottleneck Migration Patterns
-Suite 21: Metric Consistency (cycle = proc + wait)
-Suite 22-23: AI Evidence Contract
-Suite 24: Gemini Explainer (mocked)
-Suite 25: Phase 4.1 AI Evidence Consistency Audit
-
-Total: 99/99 assertions passing
-```
-
----
-
-## Security
-
-- `GEMINI_API_KEY` and `SUPABASE_SECRET_KEY` are server-only; runtime guards prevent browser access
-- `NEXT_PUBLIC_*` variables contain only publishable (anon) keys
-- `.env.local` is gitignored
-- Supabase RLS enabled; anonymous reads blocked on all tables
-- Gemini response sanitizer strips any accidental credential leakage
+- **No Secrets in Client Bundles**: API keys (`GEMINI_API_KEY`, `SUPABASE_SECRET_KEY`) are restricted to server-side execution.
+- **Row Level Security**: Supabase tables enforce strict tenant isolation and read protections.
+- **Evidence Sanitization**: Pre-prompt sanitizers strip sensitive values before submitting context to LLM models.
+- **Git Hygiene**: Environment files (`.env`, `.env.local`, `.env.*.local`) and model training caches are untracked.
 
 ---
 
 ## License
 
-MIT
+MIT © FlowLens AI

@@ -18,6 +18,7 @@ import { InteractiveFilters } from "./InteractiveFilters";
 import { DatasetUploadModal } from "../upload/DatasetUploadModal";
 import { WhatIfSimulator } from "../simulation/WhatIfSimulator";
 import { AIExplanationPanel } from "../ai/AIExplanationPanel";
+import { PredictiveIntelligencePanel } from "../ml/PredictiveIntelligencePanel";
 import {
   AlertCircle,
   UploadCloud,
@@ -437,6 +438,16 @@ export function DashboardMain() {
                 />
               </section>
             )}
+
+            {/* Section C: Predictive Process Intelligence (Phase 12 ML Layer) */}
+            <section aria-label="Predictive Process Intelligence" className="section-fade-in">
+              <PredictiveIntelligencePanel
+                key={analysis.datasetSummary.name}
+                analysis={analysis}
+                simulationResult={simulationResult}
+                targetStage={activeSelectedStageName}
+              />
+            </section>
 
             {/* Section D: What-If Intervention Lab & Bottleneck Migration Engine */}
             <section aria-label="What-If Intervention Lab" className="section-fade-in">

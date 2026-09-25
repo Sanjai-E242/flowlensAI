@@ -25,12 +25,14 @@ interface AIExplanationPanelProps {
   analysis: ProcessAnalysisResult;
   simulationResult?: SimulationResult | null;
   targetStage?: string;
+  mlPredictions?: import("@/shared/types").MLProcessPredictions | null;
 }
 
 export function AIExplanationPanel({
   analysis,
   simulationResult,
   targetStage,
+  mlPredictions,
 }: AIExplanationPanelProps) {
   const activeStage =
     targetStage || analysis.bottleneckCandidates[0]?.stageName || analysis.stages[0]?.stageName || "Verification";
@@ -82,6 +84,7 @@ export function AIExplanationPanel({
           analysis,
           simulation: simulationResult || null,
           targetStage: activeStage,
+          mlPredictions,
         }),
       });
 
@@ -110,7 +113,7 @@ export function AIExplanationPanel({
     } finally {
       setIsLoading(false);
     }
-  }, [analysis, simulationResult, activeStage, cacheKey]);
+  }, [analysis, simulationResult, activeStage, mlPredictions, cacheKey]);
 
   const rootCause = analysis.rootCauses[activeStage];
 

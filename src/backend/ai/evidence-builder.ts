@@ -13,6 +13,7 @@ import {
   AIStructuredEvidence,
   BottleneckCandidate,
   Intervention,
+  MLProcessPredictions,
 } from "@/shared/types";
 
 /**
@@ -37,7 +38,8 @@ function describeIntervention(intervention: Intervention): string {
 export function buildStructuredEvidence(
   analysis: ProcessAnalysisResult,
   simulation?: SimulationResult | null,
-  targetStage?: string
+  targetStage?: string,
+  mlPredictions?: MLProcessPredictions | null
 ): AIStructuredEvidence {
   if (!analysis || !analysis.bottleneckCandidates || analysis.bottleneckCandidates.length === 0) {
     throw new Error("Invalid ProcessAnalysisResult: missing bottleneck candidates.");
@@ -183,6 +185,21 @@ export function buildStructuredEvidence(
         narrative: simulation.migration.narrative,
       },
       assumptions: simulation.assumptions.map((a) => a.statement),
+    };
+  }
+
+  if (mlPredictions && mlPredictions.available) {
+    structured.mlPredictions = {
+      available: true,
+      predictedBottleneckStage: mlPredictions.bottleneckForecast?.predictedStage,
+      probability: mlPredictions.bottleneckForecast?.probability,
+      confidence: mlPredictions.bottleneckForecast?.confidence,
+      topFactors: mlPredictions.bottleneckForecast?.topFactors?.map((f) => f.label),
+      isAnomaly: mlPredictions.anomalyDetection?.isAnomaly,
+      anomalyScore: mlPredictions.anomalyDetection?.anomalyScore,
+      severity: mlPredictions.anomalyDetection?.severity,
+      predictedRemainingTime: mlPredictions.remainingTime?.formattedPredictedTime,
+      predictionRange: mlPredictions.remainingTime?.formattedRange,
     };
   }
 

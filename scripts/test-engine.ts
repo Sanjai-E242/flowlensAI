@@ -49,6 +49,8 @@ import {
   generateUnifiedAIExplanation,
   buildDeterministicExecutiveSummary,
 } from "../src/backend/ai";
+import { fetchAllPredictions } from "../src/backend/ml/client";
+import { MLProcessPredictions } from "../src/shared/types";
 
 let testsRun = 0;
 let testsPassed = 0;
@@ -892,6 +894,94 @@ async function runTestSuite() {
       auditedPrompt.userPrompt.includes("Verification Average Queue Wait") &&
       auditedPrompt.userPrompt.includes("Do NOT conflate these two metrics or call 4h 5m simply 'average waiting time'"),
     "Prompt builder enforces strict definition rules forbidding Gemini from conflating stage queue wait with process waiting"
+  );
+
+  // =========================================================
+  // 15. MACHINE LEARNING LAYER & PREDICTIVE PROCESS INTELLIGENCE TESTS
+  // =========================================================
+  console.log("\n--- Phase 5: Machine Learning & Predictive Process Intelligence Tests ---");
+
+  // 1. ML Service Graceful Fallback (Empty / Offline Handling)
+  const emptyMlResult = await fetchAllPredictions([]);
+  assert(
+    emptyMlResult.available === false &&
+      emptyMlResult.bottleneckForecast.predictedStage === "N/A" &&
+      emptyMlResult.anomalyDetection.isAnomaly === false &&
+      emptyMlResult.remainingTime.predictedRemainingTimeMinutes === 0,
+    "ML client gracefully falls back without throwing when empty events are provided"
+  );
+
+  // 2. Deterministic + ML Consistency Check
+  // Verify that the deterministic engine remains the inviolate single source of truth for observed metrics
+  assert(
+    syntheticResult.processMetrics.formattedAvgCycleTime === "6h" &&
+      syntheticResult.processMetrics.formattedAvgWaitingTime === "4h 20m" &&
+      syntheticResult.processMetrics.formattedAvgProcessingTime === "1h 40m" &&
+      syntheticResult.bottleneckCandidates[0].stageName === "Verification" &&
+      syntheticResult.bottleneckCandidates[0].stageMetrics.waitingContributionPct === 94.2,
+    "Deterministic engine remains inviolate single source of truth for observed metrics (6h cycle, 4h 20m wait, 94.2% wait share)"
+  );
+
+  // 3. Gemini Evidence Integration with ML Predictions
+  const mockMlPredictions: MLProcessPredictions = {
+    available: true,
+    bottleneckForecast: {
+      predictedStage: "Review",
+      probability: 0.82,
+      stageProbabilities: { Verification: 0.12, Review: 0.82, Fulfillment: 0.06 },
+      confidence: "HIGH",
+      topFactors: [
+        { factor: "waiting_contribution", label: "Waiting delay contribution", importance: 0.28, value: 24.5 },
+        { factor: "resource_load", label: "Resource workload concentration", importance: 0.21, value: 3.2 },
+      ],
+    },
+    anomalyDetection: {
+      isAnomaly: true,
+      anomalyScore: 0.84,
+      severity: "HIGH",
+      topSignals: ["Queue wait exceeded 99th percentile (142 mins)"],
+      flaggedCaseCount: 12,
+      totalCaseCount: 100,
+      anomalyRate: 0.12,
+      targetCaseId: "C1042",
+      flaggedCases: [],
+    },
+    remainingTime: {
+      predictedRemainingTimeMinutes: 138.5,
+      predictionRange: { lower: 112.0, upper: 167.0 },
+      formattedPredictedTime: "2h 18m",
+      formattedRange: "1h 52m — 2h 47m",
+      confidenceLevel: "80% CI",
+      targetCaseId: "C1042",
+    },
+  };
+
+  const evidenceWithMl = buildStructuredEvidence(
+    syntheticResult,
+    sim2Res,
+    "Verification",
+    mockMlPredictions
+  );
+
+  assert(
+    evidenceWithMl.mlPredictions?.available === true &&
+      evidenceWithMl.mlPredictions?.predictedBottleneckStage === "Review" &&
+      evidenceWithMl.mlPredictions?.probability === 0.82 &&
+      evidenceWithMl.mlPredictions?.isAnomaly === true &&
+      evidenceWithMl.mlPredictions?.severity === "HIGH" &&
+      evidenceWithMl.mlPredictions?.predictedRemainingTime === "2h 18m",
+    "Evidence builder accurately embeds ML predictions into structured Gemini evidence payload"
+  );
+
+  // 4. Prompt Builder Architectural Separation (OBSERVED vs PREDICTED vs SIMULATED)
+  const promptWithMl = buildUnifiedExplanationPrompt(evidenceWithMl);
+  assert(
+    promptWithMl.userPrompt.includes("CRITICAL ARCHITECTURAL DISTINCTION RULES") &&
+      promptWithMl.userPrompt.includes("1. OBSERVED: Grounded strictly in verified historical event logs") &&
+      promptWithMl.userPrompt.includes("2. PREDICTED: Grounded strictly in supervised/unsupervised Machine Learning forecasting") &&
+      promptWithMl.userPrompt.includes("3. SIMULATED: Grounded strictly in counterfactual simulation models") &&
+      promptWithMl.userPrompt.includes("Review as the next likely bottleneck with 82% probability"),
+    "Prompt builder strictly instructs Gemini to distinguish OBSERVED, PREDICTED, and SIMULATED categories"
   );
 
   console.log("\n=======================================================");

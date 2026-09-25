@@ -1,0 +1,101 @@
+{
+  "dataset_summary": {
+    "total_synthetic_cases": 20000,
+    "stage_window_samples": 2000,
+    "remaining_time_samples": 32589,
+    "patterns": [
+      "WAITING_BOTTLENECK",
+      "PROCESSING_BOTTLENECK",
+      "RESOURCE_BOTTLENECK",
+      "HIGH_VARIABILITY_BOTTLENECK",
+      "HIGH_VOLUME_BOTTLENECK",
+      "PEAK_PERIOD_BOTTLENECK",
+      "COMPETING_BOTTLENECKS",
+      "MIGRATION_SCENARIO"
+    ]
+  },
+  "models": {
+    "bottleneck_forecaster": {
+      "model_type": "RandomForestClassifier",
+      "n_estimators": 120,
+      "max_depth": 10,
+      "train_samples": 1500,
+      "test_samples": 500,
+      "metrics": {
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "roc_auc": 1.0,
+        "confusion_matrix": [
+          [
+            400,
+            0
+          ],
+          [
+            0,
+            100
+          ]
+        ]
+      },
+      "feature_importances": {
+        "stage_processing_mean": 0.077,
+        "stage_processing_std": 0.0413,
+        "stage_waiting_mean": 0.1044,
+        "stage_waiting_std": 0.1073,
+        "processing_contribution": 0.0661,
+        "waiting_contribution": 0.1753,
+        "event_volume": 0.001,
+        "resource_load": 0.004,
+        "queue_length": 0.0234,
+        "peak_hour_load": 0.0007,
+        "cycle_time": 0.0369,
+        "processing_time": 0.0593,
+        "waiting_time": 0.0839,
+        "process_efficiency": 0.0673,
+        "upstream_delay": 0.1237,
+        "downstream_delay": 0.0272,
+        "priority_mix": 0.0006,
+        "rework_frequency": 0.0006,
+        "stage_frequency": 0.0
+      }
+    },
+    "anomaly_detector": {
+      "model_type": "IsolationForest",
+      "contamination": 0.12,
+      "n_estimators": 150,
+      "train_samples": 15000,
+      "test_samples": 5000,
+      "metrics": {
+        "accuracy": 0.9462,
+        "precision": 0.838,
+        "recall": 0.6667,
+        "f1_score": 0.7426,
+        "roc_auc": 0.9861
+      }
+    },
+    "remaining_time_predictor": {
+      "model_type": "RandomForestRegressor",
+      "n_estimators": 100,
+      "max_depth": 12,
+      "train_samples": 26071,
+      "test_samples": 6518,
+      "metrics": {
+        "mae_minutes": 51.32,
+        "rmse_minutes": 111.37,
+        "r2_score": 0.7077
+      },
+      "feature_importances": {
+        "completed_stage_count": 0.0145,
+        "remaining_stage_count": 0.0343,
+        "current_stage_progress": 0.1617,
+        "elapsed_time": 0.221,
+        "historical_stage_processing": 0.4192,
+        "historical_stage_waiting": 0.0484,
+        "case_priority": 0.009,
+        "resource_load": 0.0004,
+        "process_efficiency": 0.0914
+      }
+    }
+  }
+}

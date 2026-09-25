@@ -105,6 +105,22 @@ export interface AIStructuredEvidence {
     };
     assumptions: string[];
   };
+
+  /**
+   * Predictive ML layer predictions (Phase 14 Gemini Evidence Integration)
+   */
+  mlPredictions?: {
+    available: boolean;
+    predictedBottleneckStage?: string;
+    probability?: number;
+    confidence?: string;
+    topFactors?: string[];
+    isAnomaly?: boolean;
+    anomalyScore?: number;
+    severity?: string;
+    predictedRemainingTime?: string;
+    predictionRange?: string;
+  };
 }
 
 /**
